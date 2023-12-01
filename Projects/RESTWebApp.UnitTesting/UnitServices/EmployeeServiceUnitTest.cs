@@ -15,7 +15,7 @@ namespace RESTWebApp.UnitTesting.UnitServices
     public class EmployeeServiceUnitTest : Mock<IEmployeeAppService>
     {
         [Fact]
-        public EmployeeServiceUnitTest GetAllProduct()
+        public EmployeeServiceUnitTest GetAllEmployee()
         {
             PageInfo pageInfo = new PageInfo(1, 5);
             pageInfo.Page = 1;
