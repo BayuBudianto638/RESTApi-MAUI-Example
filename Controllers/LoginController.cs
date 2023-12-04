@@ -20,10 +20,10 @@ namespace RESTWebApp.Example.Controllers
 
         [AllowAnonymous] 
         [HttpPost]
-        public IActionResult Login([FromBody] UserModel login)
+        public async Task<IActionResult> LoginAsync([FromBody] UserModel login)
         {
             IActionResult response = Unauthorized();
-            var user = AuthenticateUser(login);
+            var user = await AuthenticateUser(login);
 
             if (user != null)
             {
@@ -49,16 +49,19 @@ namespace RESTWebApp.Example.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private UserModel AuthenticateUser(UserModel login)
+        private Task<UserModel?> AuthenticateUser(UserModel login)
         {
-            UserModel user = null;
-
-            if (login.UserName.Equals("Shiawase"))
+            return Task.Run(() =>
             {
-                user = new UserModel { UserName = "Shiawase", Email = "Shiawase@gmail.com" };
-            }
+                UserModel? user = null;
 
-            return user;
+                if (login.UserName.Equals("Shiawase"))
+                {
+                    user = new UserModel { UserName = "Shiawase", Email = "Shiawase@gmail.com" };
+                }
+
+                return user;
+            });
         }
     }
 }

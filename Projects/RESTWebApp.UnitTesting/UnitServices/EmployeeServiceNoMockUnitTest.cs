@@ -28,7 +28,7 @@ namespace RESTWebApp.UnitTesting.UnitServices
             createEmployeeDto.Name = "TEST";
             createEmployeeDto.Age = 1000;
 
-            var result = service.Create(createEmployeeDto);
+            using var result = service.Create(createEmployeeDto);
 
             Assert.NotNull(result);
         }

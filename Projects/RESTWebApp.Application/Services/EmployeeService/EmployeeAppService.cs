@@ -13,10 +13,10 @@ using System.Threading.Tasks;
 
 namespace RESTWebApp.Application.Services.EmployeeService
 {
-    public class EmployeeAppService : IEmployeeAppService
+    public class EmployeeAppService : IEmployeeAppService, IDisposable
     {
         private readonly HumanResourcesContext _databaseContext;
-        private IMapper _mapper;
+        private IMapper? _mapper;
 
         public EmployeeAppService(HumanResourcesContext databaseContext, IMapper mapper)
         {
@@ -179,6 +179,21 @@ namespace RESTWebApp.Application.Services.EmployeeService
                 return (false, $"Error: {outerEx.Message}");
             }
 
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _databaseContext?.Dispose();
+                _mapper = null;
+            }
         }
     }
 }
