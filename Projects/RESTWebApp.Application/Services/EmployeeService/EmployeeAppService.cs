@@ -37,18 +37,18 @@ namespace RESTWebApp.Application.Services.EmployeeService
                         await _databaseContext.SaveChangesAsync();
 
                         await transaction.CommitAsync();
-                        return (true, "Success");
+                        return await Task.Run(() => (true, "Success"));
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        return (false, ex.Message);
+                        return await Task.Run(() => (false, ex.Message));
                     }
                 }
             }
             catch (Exception outerEx)
             {
-                return (false, $"Error create employee: {outerEx.Message}");
+                return await Task.Run(() => (false, $"Error create employee: {outerEx.Message}"));
             }
         }
 
@@ -68,23 +68,23 @@ namespace RESTWebApp.Application.Services.EmployeeService
                             await _databaseContext.SaveChangesAsync();
 
                             await transaction.CommitAsync();
-                            return (true, "Employee removed successfully");
+                            return await Task.Run(() => (true, "Employee removed successfully"));
                         }
                         else
                         {
-                            return (false, "Employee not found");
+                            return await Task.Run(() => (false, "Employee not found"));
                         }
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Error removing employee: {ex.Message}");
+                        return await Task.Run(() => (false, $"Error removing employee: {ex.Message}"));
                     }
                 }
             }
             catch (Exception outerEx)
             {
-                return (false, $"Error: {outerEx.Message}");
+                return await Task.Run(() => (false, $"Error: {outerEx.Message}"));
             }
         }
 
@@ -109,7 +109,7 @@ namespace RESTWebApp.Application.Services.EmployeeService
                 Total = await _databaseContext.Employees.CountAsync()
             };
 
-            return pagedResult;
+            return await Task.Run(() => pagedResult);
         }
 
         public async Task<UpdateEmployeeDto> GetEmployeeByCode(string code)
@@ -118,7 +118,7 @@ namespace RESTWebApp.Application.Services.EmployeeService
                 .FirstOrDefaultAsync(w => w.Code == code);
 
             var employeeDto = _mapper.Map<UpdateEmployeeDto>(employee);
-            return employeeDto;
+            return await Task.Run(() => employeeDto);
         }
 
         public async Task<PagedResult<EmployeeListDto>> SearchEmployee(string searchString, PageInfo pageinfo)
@@ -144,11 +144,11 @@ namespace RESTWebApp.Application.Services.EmployeeService
                                 Name = employees.Name,
                                 Age = employees.Age
                             })
-                            .ToListAsync(), 
-                Total = await _databaseContext.Employees.CountAsync() 
+                            .ToListAsync(),
+                Total = await _databaseContext.Employees.CountAsync()
             };
 
-            return pagedResult;
+            return await Task.Run(() => pagedResult);
         }
 
         public async Task<(bool, string)> Update(UpdateEmployeeDto model)
@@ -165,18 +165,18 @@ namespace RESTWebApp.Application.Services.EmployeeService
                         await _databaseContext.SaveChangesAsync();
 
                         await transaction.CommitAsync();
-                        return (true, "Success");
+                        return await Task.Run(() => (true, "Success"));
                     }
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        return (false, $"Error updating product: {ex.Message}");
+                        return await Task.Run(() => (false, $"Error updating product: {ex.Message}"));
                     }
                 }
             }
             catch (Exception outerEx)
             {
-                return (false, $"Error: {outerEx.Message}");
+                return await Task.Run(() => (false, $"Error: {outerEx.Message}"));
             }
 
         }
