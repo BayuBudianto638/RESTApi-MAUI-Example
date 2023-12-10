@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RESTWebApp.Application.Helpers;
+using RESTWebApp.Application.Models;
+using RESTWebApp.Application.Services.EmployeeService;
+using RESTWebApp.Application.Services.LoginService;
+using RESTWebApp.Application.Services.LoginService.Dto;
 using RESTWebApp.Example.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -13,12 +19,17 @@ namespace RESTWebApp.Example.Controllers
     public class LoginController : ControllerBase
     {
         private IConfiguration _configuration;
-        public LoginController(IConfiguration configuration)
+        private readonly ILoginAppService _loginAppService;
+        private IMapper? _mapper;
+
+        public LoginController(IConfiguration configuration, ILoginAppService loginAppService, IMapper mapper)
         {
             _configuration = configuration;
+            _loginAppService = loginAppService;
+            _mapper = mapper;
         }
 
-        [AllowAnonymous] 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> LoginAsync([FromBody] UserModel login)
         {
@@ -49,19 +60,32 @@ namespace RESTWebApp.Example.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private Task<UserModel?> AuthenticateUser(UserModel login)
+        private async Task<UserModel?> AuthenticateUser(UserModel userModel)
         {
-            return Task.Run(() =>
+            try
             {
-                UserModel? user = null;
+                var userLogin = _mapper.Map<UserDto>(userModel);
+                var dataLogin = await _loginAppService.Login(userLogin);
+                var login = _mapper.Map<UserModel>(dataLogin);
 
-                if (login.UserName.Equals("Shiawase"))
-                {
-                    user = new UserModel { UserName = "Shiawase", Email = "Shiawase@gmail.com" };
-                }
+                return login;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
 
-                return user;
-            });
+            //return Task.Run(() =>
+            //{
+            //    UserModel? user = null;
+
+            //    if (login.UserName.Equals("Shiawase"))
+            //    {
+            //        user = new UserModel { UserName = "Shiawase", Email = "Shiawase@gmail.com" };
+            //    }
+
+            //    return user;
+            //});
         }
     }
 }

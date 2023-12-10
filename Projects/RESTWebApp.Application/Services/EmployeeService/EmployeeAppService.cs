@@ -112,12 +112,26 @@ namespace RESTWebApp.Application.Services.EmployeeService
             return await Task.Run(() => pagedResult);
         }
 
-        public async Task<UpdateEmployeeDto> GetEmployeeByCode(string code)
+        public async Task<List<EmployeeListDto>> GetAllEmployees()
+        {
+            var employeesQuery = from employees in _databaseContext.Employees
+                                 select new EmployeeListDto
+                                 {
+                                     Id = employees.Id,
+                                     Code = employees.Code,
+                                     Name = employees.Name,
+                                     Age = employees.Age
+                                 };
+                       
+            return await Task.Run(() => employeesQuery.ToListAsync());
+        }
+
+        public async Task<EmployeeListDto> GetEmployeeByCode(string code)
         {
             var employee = await _databaseContext.Employees
                 .FirstOrDefaultAsync(w => w.Code == code);
 
-            var employeeDto = _mapper.Map<UpdateEmployeeDto>(employee);
+            var employeeDto = _mapper.Map<EmployeeListDto>(employee);
             return await Task.Run(() => employeeDto);
         }
 
@@ -159,9 +173,9 @@ namespace RESTWebApp.Application.Services.EmployeeService
                 {
                     try
                     {
-                        var product = _mapper.Map<MstEmployee>(model);
+                        var employee = _mapper.Map<MstEmployee>(model);
 
-                        _databaseContext.Employees.Update(product);
+                        _databaseContext.Employees.Update(employee);
                         await _databaseContext.SaveChangesAsync();
 
                         await transaction.CommitAsync();
@@ -170,7 +184,7 @@ namespace RESTWebApp.Application.Services.EmployeeService
                     catch (Exception ex)
                     {
                         await transaction.RollbackAsync();
-                        return await Task.Run(() => (false, $"Error updating product: {ex.Message}"));
+                        return await Task.Run(() => (false, $"Error updating employee: {ex.Message}"));
                     }
                 }
             }

@@ -14,7 +14,8 @@ namespace RESTWebApp.Application.Services.EmployeeService
         Task<(bool, string)> Update(UpdateEmployeeDto model);
         Task<(bool, string)> Delete(int id);
         Task<PagedResult<EmployeeListDto>> GetAllEmployees(PageInfo pageinfo);
-        Task<UpdateEmployeeDto> GetEmployeeByCode(string code);
+        Task<EmployeeListDto> GetEmployeeByCode(string code);
         Task<PagedResult<EmployeeListDto>> SearchEmployee(string searchString, PageInfo pageinfo);
+        Task<List<EmployeeListDto>> GetAllEmployees();
     }
 }

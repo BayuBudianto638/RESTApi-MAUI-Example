@@ -23,5 +23,9 @@ namespace RESTWebApp.Application.Helpers
             Page = page;
             PageSize = pageSize;
         }
+
+        public PageInfo()
+        {
+        }
     }
 }

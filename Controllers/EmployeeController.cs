@@ -23,7 +23,7 @@ namespace RESTWebApp.Example.Controllers
 
         [HttpGet("GetAllEmployee")]
         [Produces("application/json")]
-        [Authorize] 
+        [Authorize]
         public async Task<IActionResult> GetAllEmployee([FromQuery] PageInfo pageinfo)
         {
             try

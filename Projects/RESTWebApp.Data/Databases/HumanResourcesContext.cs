@@ -11,6 +11,7 @@ namespace RESTWebApp.Data.Databases
     public class HumanResourcesContext : DbContext
     {
         public DbSet<MstEmployee> Employees { get; set; }
+        public DbSet<MstUser> Users { get; set; }
         public HumanResourcesContext(DbContextOptions<HumanResourcesContext> options) : base(options)
         {
 
