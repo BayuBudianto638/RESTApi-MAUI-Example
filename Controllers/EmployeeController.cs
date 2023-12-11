@@ -21,7 +21,7 @@ namespace RESTWebApp.Example.Controllers
             _employeeAppService = employeeAppService;
         }
 
-        [HttpGet("GetAllEmployee")]
+        [HttpGet("GetAllEmployeeWithPage")]
         [Produces("application/json")]
         [Authorize]
         public async Task<IActionResult> GetAllEmployee([FromQuery] PageInfo pageinfo)
@@ -30,6 +30,26 @@ namespace RESTWebApp.Example.Controllers
             {
                 var employeeList = await _employeeAppService.GetAllEmployees(pageinfo);
                 if (employeeList.Data.Count() < 1)
+                {
+                    return Requests.Response(this, new ApiStatus(404), null, "Not Found");
+                }
+                return Requests.Response(this, new ApiStatus(200), employeeList, "");
+            }
+            catch (Exception ex)
+            {
+                return Requests.Response(this, new ApiStatus(500), null, ex.Message); // not found
+            }
+        }
+
+        [HttpGet("GetAllEmployee")]
+        [Produces("application/json")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllEmployee()
+        {
+            try
+            {
+                var employeeList = await _employeeAppService.GetAllEmployees();
+                if (employeeList.Count() < 1)
                 {
                     return Requests.Response(this, new ApiStatus(404), null, "Not Found");
                 }

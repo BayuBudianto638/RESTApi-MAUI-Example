@@ -8,52 +8,19 @@ using System.Threading.Tasks;
 namespace RESTWebApp.Application.Helpers
 {
     public static class CryptographyHelper
-    {      
-
-        public static string Encrypt(string plainText, string privateKey, string iv)
+    {
+        public static string GenerateHashWithSalt(string password, string salt)
         {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Encoding.UTF8.GetBytes(privateKey);
-                aesAlg.IV = Encoding.UTF8.GetBytes(iv);
-
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msEncrypt = new MemoryStream())
-                {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
-                        {
-                            swEncrypt.Write(plainText);
-                        }
-                    }
-
-                    return Convert.ToBase64String(msEncrypt.ToArray());
-                }
-            }
-        }
-
-        public static string Decrypt(string cipherText, string privateKey, string iv)
-        {
-            using (Aes aesAlg = Aes.Create())
-            {
-                aesAlg.Key = Encoding.UTF8.GetBytes(privateKey);
-                aesAlg.IV = Encoding.UTF8.GetBytes(iv);
-
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(cipherText)))
-                {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
-                        {
-                            return srDecrypt.ReadToEnd();
-                        }
-                    }
-                }
-            }
+            // merge password and salt together
+            string sHashWithSalt = password + salt;
+            // convert this merged value to a byte array
+            byte[] saltedHashBytes = Encoding.UTF8.GetBytes(sHashWithSalt);
+            // use hash algorithm to compute the hash
+            HashAlgorithm algorithm = new SHA256Managed();
+            // convert merged bytes to a hash as byte array
+            byte[] hash = algorithm.ComputeHash(saltedHashBytes);
+            // return the has as a base 64 encoded string
+            return Convert.ToBase64String(hash);
         }
     }
 }

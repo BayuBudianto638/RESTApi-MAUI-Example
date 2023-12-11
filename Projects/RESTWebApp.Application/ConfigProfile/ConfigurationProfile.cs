@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using RESTWebApp.Application.Services.EmployeeService.Dto;
-using RESTWebApp.Application.Services.LoginService.Dto;
+using RESTWebApp.Application.Services.UserService.Dto;
 using RESTWebApp.Data.Models;
 using System;
 using System.Collections.Generic;

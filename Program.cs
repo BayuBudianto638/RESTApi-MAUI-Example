@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RESTWebApp.Application.ConfigProfile;
+using RESTWebApp.Example.ConfigProfile;
 using RESTWebApp.Application.Services.EmployeeService;
+using RESTWebApp.Application.Services.LoginService;
 using RESTWebApp.Data.Databases;
 using System.Text;
 
@@ -33,12 +35,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var config = new AutoMapper.MapperConfiguration(cfg =>
 {
     cfg.AddProfile(new ConfigurationProfile());
+    cfg.AddProfile(new ConfigProfile());
 });
 var mapper = config.CreateMapper();
 
 // Add services to the container.
 builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<IEmployeeAppService, EmployeeAppService>();
+builder.Services.AddTransient<ILoginAppService, LoginAppService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

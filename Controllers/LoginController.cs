@@ -7,7 +7,7 @@ using RESTWebApp.Application.Helpers;
 using RESTWebApp.Application.Models;
 using RESTWebApp.Application.Services.EmployeeService;
 using RESTWebApp.Application.Services.LoginService;
-using RESTWebApp.Application.Services.LoginService.Dto;
+using RESTWebApp.Application.Services.UserService.Dto;
 using RESTWebApp.Example.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -31,7 +31,7 @@ namespace RESTWebApp.Example.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> LoginAsync([FromBody] UserModel login)
+        public async Task<IActionResult> LoginAsync([FromBody] LoginModel login)
         {
             IActionResult response = Unauthorized();
             var user = await AuthenticateUser(login);
@@ -60,7 +60,7 @@ namespace RESTWebApp.Example.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private async Task<UserModel?> AuthenticateUser(UserModel userModel)
+        private async Task<UserModel?> AuthenticateUser(LoginModel userModel)
         {
             try
             {
@@ -74,18 +74,6 @@ namespace RESTWebApp.Example.Controllers
             {
                 return null;
             }
-
-            //return Task.Run(() =>
-            //{
-            //    UserModel? user = null;
-
-            //    if (login.UserName.Equals("Shiawase"))
-            //    {
-            //        user = new UserModel { UserName = "Shiawase", Email = "Shiawase@gmail.com" };
-            //    }
-
-            //    return user;
-            //});
-        }
+        }        
     }
 }

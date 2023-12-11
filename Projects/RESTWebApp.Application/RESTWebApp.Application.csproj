@@ -12,6 +12,7 @@
   <ItemGroup>
     <Folder Include="Enums\" />
     <Folder Include="SeedWork\" />
+    <Folder Include="Services\LoginService\Dto\" />
   </ItemGroup>
 
   <ItemGroup>
