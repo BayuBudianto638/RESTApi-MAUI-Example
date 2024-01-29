@@ -122,7 +122,7 @@ namespace RESTWebApp.Application.Services.EmployeeService
                                      Name = employees.Name,
                                      Age = employees.Age
                                  };
-                       
+
             return await Task.Run(() => employeesQuery.ToListAsync());
         }
 
@@ -192,7 +192,6 @@ namespace RESTWebApp.Application.Services.EmployeeService
             {
                 return await Task.Run(() => (false, $"Error: {outerEx.Message}"));
             }
-
         }
 
         public void Dispose()
